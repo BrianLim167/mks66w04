@@ -41,14 +41,14 @@ screen.draw_lines(m, green)
 
 Matrix.ident().print()
 print("###########\n")
-Matrix.mult(Matrix.ident(),m).print()
+(Matrix.ident() * m).print()
 print("###########\n")
 
 for i in range(10):
     for j in range(20):
         t = Matrix.ident(3)
         t.add_point(40*i+30,25*j+30)
-        n = Matrix.mult(t,m)
+        n = t * m
         n.print()
         print("###########\n")
         screen.draw_lines(n, red)
@@ -56,14 +56,14 @@ for i in range(10):
     for j in range(20):
         t = Matrix.ident(3)
         t.add_point(45*i+60,15*j-30)
-        n = Matrix.mult(t,m)
+        n = t * m
         n.print()
         print("###########\n")
         screen.draw_lines(n, yellow)
     for c in range(t.cols):
         t.matrix[c][c] = 5
     t.matrix[3][3] = 1
-    n = Matrix.mult(t,m)
+    n = t * m
     n.print()
     print("###########\n")
     screen.draw_lines(n, cyan)

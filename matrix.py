@@ -21,6 +21,14 @@ class Matrix(object):
         for c in range( m.cols ):
             m.matrix[c][c] = 1
         return m
+
+    @staticmethod
+    def mover(x,y,z):
+        m = Matrix.ident()
+        m.matrix[0][3] = x
+        m.matrix[1][3] = y
+        m.matrix[2][3] = z
+        return m
     
     def __init__(self, rows = 4, cols = 4):
         self.matrix = []
@@ -30,6 +38,9 @@ class Matrix(object):
             self.matrix.append( [] )
             for r in range( rows ):
                 self.matrix[c].append( 0 )
+
+    def __mul__(self, other):
+        return Matrix.mult(self,other)
 
     def print( self ):
         s = ""
