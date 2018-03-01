@@ -35,13 +35,14 @@ m = Matrix(4,0)
 m.add_edge(10,10,0, 30,40,0)
 m.add_edge(30,40,0, 0, 20,0)
 m.add_edge(0, 20,0, 10,10,0)
-m.print()
+print(m)
 print("###########\n")
 screen.draw_lines(m, green)
 
 Matrix.ident().print()
 print("###########\n")
-(Matrix.ident() * m).print()
+##m *= Matrix.ident()!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+print(m)
 print("###########\n")
 
 for i in range(10):
@@ -49,7 +50,7 @@ for i in range(10):
         t = Matrix.ident(3)
         t.add_point(40*i+30,25*j+30)
         n = t * m
-        n.print()
+        print(n)
         print("###########\n")
         screen.draw_lines(n, red)
 for i in range(10):
@@ -57,14 +58,14 @@ for i in range(10):
         t = Matrix.ident(3)
         t.add_point(45*i+60,15*j-30)
         n = t * m
-        n.print()
+        print(n)
         print("###########\n")
         screen.draw_lines(n, yellow)
     for c in range(t.cols):
-        t.matrix[c][c] = 5
-    t.matrix[3][3] = 1
+        t[c][c] = 5
+    t[3][3] = 1
     n = t * m
-    n.print()
+    print(n)
     print("###########\n")
     screen.draw_lines(n, cyan)
 

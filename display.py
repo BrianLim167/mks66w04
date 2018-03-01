@@ -24,25 +24,34 @@ class PPMGrid(object):
             row = []
             self.screen.append( row )
             for x in range( width ):
-                self.screen[y].append( PPMGrid.DEFAULT_COLOR[:] )
+                self[y].append( PPMGrid.DEFAULT_COLOR[:] )
+
+    def __getitem__(self, i):
+        return self.screen[i]
+
+    def __setitem__(self, i, val):
+        self.screen[i] = val
+
+    def __len__(self):
+        return len(self.screen)
 
     def plot( self, color, x, y ):
         newy = PPMGrid.YRES - 1 - y
         if ( x >= 0 and x < PPMGrid.XRES and newy >= 0 and newy < PPMGrid.YRES ):
-            self.screen[newy][x] = color[:]
+            self[newy][x] = color[:]
 
     def clear( self ):
-        for y in range( len(self.screen) ):
-            for x in range( len(self.screen[y]) ):
-                self.screen[y][x] = PPMGrid.DEFAULT_COLOR[:]
+        for y in range( len(self) ):
+            for x in range( len(self[y]) ):
+                self[y][x] = PPMGrid.DEFAULT_COLOR[:]
 
     def save_ppm( self, fname ):
         f = open( fname, 'w' )
-        ppm = 'P3\n' + str(len(self.screen[0])) +' '+ str(len(self.screen)) +' '+ str(PPMGrid.MAX_COLOR) +'\n'
-        for y in range( len(self.screen) ):
+        ppm = 'P3\n' + str(len(self[0])) +' '+ str(len(self)) +' '+ str(PPMGrid.MAX_COLOR) +'\n'
+        for y in range( len(self) ):
             row = ''
-            for x in range( len(self.screen[y]) ):
-                pixel = self.screen[y][x]
+            for x in range( len(self[y]) ):
+                pixel = self[y][x]
                 row+= str( pixel[ PPMGrid.RED ] ) + ' '
                 row+= str( pixel[ PPMGrid.GREEN ] ) + ' '
                 row+= str( pixel[ PPMGrid.BLUE ] ) + ' '
@@ -122,10 +131,10 @@ class PPMGrid(object):
 
     def draw_lines( self, matrix, color ):
         for c in range(matrix.cols//2):
-            self.draw_line( matrix.matrix[c*2][0],
-                            matrix.matrix[c*2][1],
-                            matrix.matrix[c*2+1][0],
-                            matrix.matrix[c*2+1][1],
+            self.draw_line( matrix[c*2][0],
+                            matrix[c*2][1],
+                            matrix[c*2+1][0],
+                            matrix[c*2+1][1],
                             color )
                             
         
