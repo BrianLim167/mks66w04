@@ -20,6 +20,8 @@ class PPMGrid(object):
 
     def __init__( self, width = XRES, height = YRES ):
         self.screen = []
+        self.width = width
+        self.height = height
         for y in range( height ):
             row = []
             self.screen.append( row )
@@ -36,6 +38,7 @@ class PPMGrid(object):
         return len(self.screen)
 
     def plot( self, color, x, y ):
+        (x,y) = (int(x),int(y))
         newy = PPMGrid.YRES - 1 - y
         if ( x >= 0 and x < PPMGrid.XRES and newy >= 0 and newy < PPMGrid.YRES ):
             self[newy][x] = color[:]
@@ -137,5 +140,48 @@ class PPMGrid(object):
                             matrix[c*2+1][1],
                             color )
                             
+    ############################################################################
+    # transform
+    ############################################################################
+    def parse_file( self, fname, points, transform, color ):
+        fopen = open(fname,'r')
+        fread = fopen.read()
+        fopen.close()
+
+        t = transform
+        e = points
+
+        cmd = fread.split('\n')
+        for i in range(len(cmd)):
+            if ( i != len(cmd)-1 ):
+                args = cmd[i+1].split()
+            if ( cmd[i] == "line" ):
+                e.add_edge(float(args[0]),float(args[1]),float(args[2]),
+                           float(args[3]),float(args[4]),float(args[5]))
+            elif ( cmd[i] == "ident" ):
+                t = Matrix.ident()
+            elif ( cmd[i] == "scale" ):
+                t *= Matrix.scaler(float(args[0]),float(args[1]),float(args[2]))
+            elif ( cmd[i] == "move" ):
+                t *= Matrix.mover(float(args[0]),float(args[1]),float(args[2]))
+            elif ( cmd[i] == "rotate" ):
+                if ( args[0] == 'x' ):
+                    t *= Matrix.rotx(float(args[1]))
+                elif ( args[0] == 'y' ):
+                    t *= Matrix.roty(float(args[1]))
+                elif ( args[0] == 'z' ):
+                    t *= Matrix.rotz(float(args[1]))
+            elif ( cmd[i] == "apply" ):
+                e *= t
+            elif ( cmd[i] == "display" ):
+                self.draw_lines(e, color)
+                self.display()
+                self = PPMGrid(self.width, self.height)
+            elif ( cmd[i] == "save" ):
+                self.draw_lines(e, color)
+                self.save_extension(args[0])
+                self = PPMGrid(self.width, self.height)
+            elif ( cmd[i] == "quit" ):
+                return
         
 
